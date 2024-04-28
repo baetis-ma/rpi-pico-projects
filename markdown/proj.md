@@ -1,12 +1,12 @@
 #### Here is a bundle of RPi pico projects for anyone interested. They are all done using the PICO SDK using the C (or C++) language.
 
-#### The SDK is pretty easy to install on major platforms - linux, windows, mac - well documented walk throughs are available on web for each. The components are readily available and inexpensive. I have loaded the project into github - [GitHub - baetis-ma/rpi-pico-projects](https://github.com/baetis-ma/rpi-pico-projects/tree/main) , the following bullets contain outlines of the individual projects. All you need to tun these projects are the pico board, a peripheral board and a usb cable to your computer.
+#### The SDK is pretty easy to install on major platforms - linux, windows, mac - well documented walk throughs are available on web for each. The components are readily available and inexpensive. I have loaded the project into github - [GitHub - baetis-ma/rpi-pico-projects](https://github.com/baetis-ma/rpi-pico-projects/tree/master) , the following bullets contain outlines of the individual projects. All you need to tun these projects are the pico board, a peripheral board and a usb cable to your computer.
 
 ## Heart Rate Monitor
 
 #### Core1 sets up the MAX30102 configuration, then continuously reads the 16 bit reflection return of the red and infrared leds into the red and infrared photosenors into a circular buffer shared with Core0 via the interprocessor buffer, an end pointer is also supplied. Core1 treats the data to a chebyshev 4 pole band pass 7 to 0.7 hertz 100 samples/sec filter, and extracts the pulse rate and calculates the spO2 concentration from the ir vs red ratios.
 
-<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/main/markdown/heart.png?raw=true" alt="" height="" width="424" data-align="center">
+<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/master/markdown/heart.png?raw=true" alt="" height="" width="424" data-align="center">
 
 #### Core0 simply presents the data streaming in from core1. In the case of a pico-w, a webpage can be presented with the data updating about once a second (tcp and browsers are slow) with a browser at \<ip address\>/index.html. Alternatively, in the absence of the wifi radio, the raw data serial output can be piped into a perl program and gnuplotted, with updates at 10fps as in the accompanying picture, data represents the last five seconds of collected data.
 
@@ -14,7 +14,7 @@
 
 #### This program reads the i2s microphone output (inmp441 or msm261s4030h0) at a 22.05KHz sample rate in bursts of 2048 samples and performs an fft on this data to produce a 0-11KHz spectrum every 100msec. The spectrum is output to the serial port and piped into a perl program handling a circular buffer array which is then gnuplotted on a color bar (x-freq,y-time and z color amplitude) and updated 10fps, the graph shows the last 50 seconds of time. The attached picture was taken in a room with a few birds doing accompaniment and a 20-20KHz swept tone with a not so great speakers.
 
-<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/main/markdown/spectrum.png?raw=true" alt="" height="" width="272" data-align="center">
+<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/master/markdown/spectrum.png?raw=true" alt="" height="" width="272" data-align="center">
 
 ## Ten Axis Accelerometer-Gyroscope-Magnetometer-Pressure with OLED
 
@@ -22,7 +22,7 @@
 
 #### Core0 gets data from the magnetometer (qmc5883l) and the pressure sensor (bmp280) and presents screen summary to the oled display (ssd1306). The elevation is calculated from change in atmospheric pressure since calibration and on some days can drift pretty quickly.
 
-<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/main/markdown/imu.jpg?raw=true" alt="" width="188" data-align="center">
+<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/master/markdown/imu.jpg?raw=true" alt="" width="188" data-align="center">
 
 ## Text scroller
 
@@ -32,7 +32,7 @@
 
 #### The font is then decoded into led being on or off and the result interlaced along the 8x64 length of the array, the font is proportionally spaced for narrow characers. The serial scan advances by one column every 30ms for what, I find, a pretty good reading speed. The font came from a standard 5x7 font table that was found on the web and modified to 5x8 to lower extend the gjpqy,;s. Finding a good diffuser is a challenge.
 
-![](https://github.com/baetis-ma/rpi-pico-projects/blob/main/markdown/scroll.jpg?raw=true)
+![](https://github.com/baetis-ma/rpi-pico-projects/blob/master/markdown/scroll.jpg?raw=true)
 
 #### This project requires a (couple) ws2812b 8x32 led arrays (you can get these for about $6 each).
 
@@ -42,7 +42,7 @@
 
 #### The logic analyzer runs completely within core 1 of the processor so will not interfere with single processor applications running in core0.
 
-<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/main/markdown/la.png?raw=true" alt="" width="454" data-align="center">
+<img title="" src="https://github.com/baetis-ma/rpi-pico-projects/blob/master/markdown/la.png?raw=true" alt="" width="454" data-align="center">
 
 #### Shell scripts to automate routine procedures
 

@@ -1,0 +1,8 @@
+export PICO_SDK_PATH=~/rpi-pico/pico-sdk/
+
+
+stty -F /dev/ttyACM0 115200 raw; cat /dev/ttyACM0  | ./spectrum.pl
+
+audacious audiosweep.mp3
+
+spectrum.png is output file (view with updating viewer - such as linux Image Viewer)

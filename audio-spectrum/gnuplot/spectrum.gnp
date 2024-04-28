@@ -1,0 +1,22 @@
+#!/usr/bin/gnuplot
+set term png size 800, 600 background rgb "gray50"
+set output "spectrum.png"
+#set term x11
+set title "Spectrogram"
+unset key
+#set tic scale 0
+set xrange[0:11.025]
+set yrange[0:5]
+set cbrange[-1.5: ]
+set xlabel "frequency (KHz)"
+set ylabel "time (-sec)"
+
+#set dgrid3d
+#set pm3d interpolate 4,4
+set view map
+#set palette defined (0 "white", .5 "black" )
+#set palette defined ( 0 0 0 0, 1 1 1 1)
+#while(1) {
+plot "spectrum.data" u (0.0218*$1):(5-0.01*$2):(log($3)) matrix with image
+#replot
+#}

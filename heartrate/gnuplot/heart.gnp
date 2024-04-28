@@ -1,0 +1,11 @@
+#!/usr/bin/gnuplot 
+set term png size 800, 400 background rgb 'gray10'
+set output 'heart.png'
+set yrange [-600:600]
+#set title "`head -1 heart.data | sed 's/#//'`" tc 'red' font 'Arial Bold,18'
+set label 1 at graph 0.26,0.95  "`head -1 heart.data | sed 's/#//'`" tc 'red' font 'Arial Bold,18'
+ 
+unset key
+unset ytics
+set xtics 1
+plot 'heart.data'  w l lw 3 

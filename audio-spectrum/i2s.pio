@@ -1,0 +1,63 @@
+;
+; Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+;
+; SPDX-License-Identifier: BSD-3-Clause
+;
+
+.program i2s
+.side_set 1
+    nop                side 0x1
+loop:
+    set x, 30          side 0x1
+    set pins, 0        side 0x0
+    in pins, 1         side 0x0
+wc0:
+    nop  [1]           side 0x1
+    in pins, 1         side 0x0
+    jmp x-- wc0        side 0x0
+
+    nop                side 0x1
+    set x, 30          side 0x1
+    set pins, 1        side 0x0
+    in pins, 1         side 0x0
+wc1:
+    nop  [1]           side 0x1
+    in pins, 1         side 0x0
+    jmp x-- wc1        side 0x0
+
+    jmp loop           side 0x1
+
+% c-sdk {
+static inline void i2s_program_init(PIO pio, uint sm, uint offset, 
+     uint i2s_ck, uint i2s_ws, uint i2s_da, float clk_div) {
+
+    pio_sm_config c = i2s_program_get_default_config(offset);
+
+    //define pin types
+    sm_config_set_sideset_pins(&c, i2s_ck);
+    sm_config_set_in_pins(&c, i2s_da);
+    sm_config_set_set_pins(&c, i2s_ws, 1);
+    //sm_config_set_out_pins(&c, out_pin, 1);
+
+
+    //mask reg is out and sidesets masked together
+    pio_sm_set_pins_with_mask(pio, sm, 0, (1u << i2s_ck) | (1u << i2s_ws));
+    //first mask register has out and sidesets second mask all pins (out+side+in)
+    pio_sm_set_pindirs_with_mask(pio, sm, (1u << i2s_ck) | (1u << i2s_ws),
+                (1u << i2s_ck) | (1u << i2s_ws) | (1u << i2s_da));
+
+    //initalize each pin
+    pio_gpio_init(pio, i2s_ck);
+    pio_gpio_init(pio, i2s_ws);
+    pio_gpio_init(pio, i2s_da);
+    
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    sm_config_set_in_shift(&c, false, true, 32); //&c, true=shift-right, auto-push, word size
+    //sm_config_set_out_shift(&c, false, true, 32);
+
+    hw_set_bits(&pio->input_sync_bypass, 1u << i2s_da); //optional sync bypass
+    sm_config_set_clkdiv(&c, clk_div);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

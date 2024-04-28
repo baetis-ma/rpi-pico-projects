@@ -1,0 +1,22 @@
+# command list:
+# rate <d>           -  sample rate in microseconds - float > 0.02
+# update <d>         -  update rate in seconds - float
+# samples <d>        -  number of samples
+# trig <d>           -  trigger pin - -num no trigger
+# toff <d>           -  trigger offset float from 0.0 to 1.0
+# col <d> <d> ...    -  output column pin assignment-bus sep by ,
+# label <s> <s> ...  -  label assigned to pin column groups
+# pause              -  pause output
+
+printf "help\r" >  /dev/ttyACM0 
+or
+cat <filename> > /dev/ttyACM0
+if you have a file with presets
+
+
+stty 1:0:80001cb2:0:3:1c:7f:15:4:5:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0 -F /dev/ttyACM1
+cat /dev/ttyACM0 | ./read_logic | gnuplot
+
+
+
+

@@ -1,0 +1,61 @@
+--> export PICO_SDK_PATH=~/rpi-pico/pico-sdk/
+
+c program needs 
+#include "pico/cyw43_arch.h
+
+--> mkdir build
+--> cd build
+--> cmake -DPICO_BOARD=pico_w ..
+--> make
+disconnect pico from usb, reinsert pucjin reboot
+--> cp printflash.uf2 /media/montana/RPI-RP2/
+stty -F /dev/ttyACM0 115200 raw; cat /dev/ttyACM0
+
++++++++++++++
+helpful scripts
+. ../../setenv.sh (must run from source for terminal shell)
+../../flash.sh   <monitor/minicom>      (alt-a x to exit minicom)
++++++++++++++
+
+
+
+
+access serial over usb
+--> sudo screen /dev/ttyACM0 115200
+(cntlA and \ then y to exit)
+
+--> sudo stty --file=/dev/ttyUSB0 115200 raw
+--> sudo cat /dev/ttyACM0
+avoid using sudo by
+sudo usermod -a -G dialout montana
+(need to login out and in once)
+or 
+--> su montana
+
+using gnuplot
++++++++++++++++++
+
+
+
+New machine setup
+
+--> mkdir rpi-pico
+--> cd rpi-pico
+--> git clone https://github.com/raspberrypi/pico-sdk.git
+--> git clone https://github.com/raspberrypi/pico-examples.git
+
+--> cd pico-sdk
+--> git submodule update --init
+
+--> sudo apt update
+--> sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential 
+
+Execute sdk example
+cd ~/Desktp/rpi-pico
+cp -r ~/rpi-pico/pico-examples/pico_w/wifi_scan/ .
+cd wifi_scan
+
+
+
+
+

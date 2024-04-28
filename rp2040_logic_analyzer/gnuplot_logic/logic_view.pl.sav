@@ -1,0 +1,86 @@
+#! /usr/bin/perl
+use strict;
+use warnings;
+use String::Scanf;
+use IO::Select;
+my $s = IO::Select->new();
+$s->add(\*STDIN);
+
+my $numarg = $#ARGV + 1;
+print $#ARGV + 1;
+if(1 != ($ARGV[0] =~ m/\/dev\/tty/)) { printf "looks like bad port name\n"; exit();}
+
+#open up /dev/tty serial port from rp2040 - stty save taken when setup (minicom)
+system("stty 1:0:80001cb2:0:3:1c:7f:15:4:5:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0 -F /dev/ttyACM0\n");
+sleep(1);
+open( COM, '+>', $ARGV[0]) || die "Cannot read serial port : $!\n";
+#open( my $serout, '>' , $ARGV[0]) || die "Cannot read serial port : $!\n";
+#open (FOUT, '>', "save") || die "Cannot write output file : $!\n";
+#open (FH, '>', './save') || die "Cannot write output file : $!\n";
+
+my $line;
+my $foo;
+my $first = 0;
+while (1) {
+   $line = <COM>;
+   $| = 1;
+   print $line;
+   if($line =~ m/highspeed/) {
+      (my $samp, my $rate, my $trigpin, my $off) = 
+            sscanf("highspeed samp=%d rate=%fus trigpin=%d trigoff=%f", $line); 
+      if($first == 0){ 
+         printf(STDERR "            >>>  Logic Trace Specifics  <<\n");
+         printf(STDERR "   samples     rate         width     Extent     trigpin        trigoff\n");
+         printf(STDERR "    %4d     %6.2fus    %6.1fms  %6.1fms         %2d      %6.2fms(%.2f)\n",
+		 $samp, $rate, 0.001*$samp*$rate, 0.001*50000*$rate, $trigpin, 
+		 0.001*$samp*$rate*$off, $off); 
+	 printf(STDERR "cmds: rate-samples-col-labels-update-trig-toff-exit-plot-pause-help\n\n--> ");
+	 $first = 1; 
+      }
+   } 
+   elsif($line =~ m/e/) { } 
+   elsif($line =~ m/#/) { } 
+   else { print $line ; } 
+
+
+
+
+   if ($s->can_read(0) ) {
+      chomp($foo = <STDIN>);
+
+      if($foo =~ m/exit/) { exit(); } 
+      elsif($foo =~ m/plot/) {   
+	      #open ($WAVEOUT, ">save");
+	 printf("changed output\n");
+	 #open ($WAVEOUT, " | ./read_logic | gnuplot");
+      }
+      elsif($foo =~ m/plot/) {  } 
+      elsif($foo =~ m/pause/) {  } 
+      elsif($foo =~ m/help/) { 
+         printf("samples      - number of samples to display\n"); 
+         printf("rate         - rate of sample acquire in usec\n"); 
+         printf("col          - gpio pin number groups, comma betwwen numbers makes bus\n"); 
+         printf("labels       - labels of the pin groups\n"); 
+         printf("trig         - gpio trigger pin\n"); 
+         printf("toff         - trigger offset - float from 0 - 1.0\n"); 
+         printf("plot         - send data to gnuplot\n"); 
+         printf("exit         - exit program\n\n--> "); 
+      } 
+      else {
+         printf COM  "%s\r", $foo;
+         printf "%s\r", $foo;
+         $first = 0;
+      }
+  }
+}
+
+
+
+   # my @all_nums    = $line =~ /(\d+)/g;
+   # if( $all_nums[1] == 1 && $all_nums[2] == 1){ 
+   #  if($all_nums[0]-$last > 0){
+   #         printf("%5d %5d\n",$all_nums[0],$all_nums[0]-$last);}
+   #  $last = $all_nums[0];
+   #
+   #if( $all_nums[1] == 0){ print "   ",$all_nums[0]%10,"\n"; }
+   #printf $line;

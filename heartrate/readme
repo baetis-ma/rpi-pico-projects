@@ -1,0 +1,7 @@
+cmake -DPICO_BOARD=pico_w ..
+
+feh  heart.png --reload 0.1 -x
+(alt + space) to move window
+
+sudo tcpdump --interface 1  host 192.168.0.131
+

@@ -1,0 +1,7 @@
+while (true); do echo -n "This is a test in loop $i "; date ; sleep .333; done
+
+
+../rp2040/monitor.sh | ./heart.pl
+sxiv heart.png
+
+

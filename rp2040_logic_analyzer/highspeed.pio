@@ -1,0 +1,25 @@
+;
+; Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+;
+; SPDX-License-Identifier: BSD-3-Clause
+;
+
+.program highspeed
+    in pins, 32
+
+% c-sdk {
+static inline void highspeed_program_init(PIO pio, uint sm, uint offset, float clk_div) {
+
+    pio_sm_config c = highspeed_program_get_default_config(offset);
+
+    //define input pin base
+    sm_config_set_in_pins(&c, 0);
+    
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    sm_config_set_in_shift(&c, true, true, 32); //&c, true=shift-right, auto-push, word size
+
+    sm_config_set_clkdiv(&c, clk_div);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
